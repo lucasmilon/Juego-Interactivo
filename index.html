@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+</style>
+<title>Juegos del Reporte BBVA</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Mono:wght@500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+/* Layout: one-column phone app, 560px max. Home is a list of six games; each game takes the full screen and ends on a score. */
+:root{
+  --bg:#F1F5F2; --surface:#FFFFFF; --ink:#0E2A21; --muted:#4F645B; --line:#D3DDD7;
+  --brand:#0F4D3A; --on-brand:#F1F5F2; --accent:#9A6F12;
+  --hero-bg:#0F4D3A; --hero-ink:#EAF3EE; --hero-soft:#B9D3C6; --hero-accent:#E3B24D;
+  --good:#17703F; --good-bg:#DCF0E3; --bad:#A93226; --bad-bg:#F7DDD9;
+  --c1:#17703F; --c2:#1F5AA6; --c3:#9A6F12; --c4:#7B4A9C;
+  --f-display:'Bricolage Grotesque','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --f-body:'DM Sans','Segoe UI',system-ui,sans-serif;
+  --f-mono:'DM Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A1814; --surface:#11261F; --ink:#E6EFE9; --muted:#9BB2A7; --line:#22403A;
+    --brand:#4FCB97; --on-brand:#06241A; --accent:#E3B24D;
+    --hero-bg:#123A2E; --hero-ink:#EAF3EE; --hero-soft:#A9C7B8; --hero-accent:#E3B24D;
+    --good:#5FD3A0; --good-bg:#12382A; --bad:#FF9A8B; --bad-bg:#432019;
+    --c1:#5FD3A0; --c2:#7FB2F0; --c3:#E3B24D; --c4:#C79BE6;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A1814; --surface:#11261F; --ink:#E6EFE9; --muted:#9BB2A7; --line:#22403A;
+  --brand:#4FCB97; --on-brand:#06241A; --accent:#E3B24D;
+  --hero-bg:#123A2E; --hero-ink:#EAF3EE; --hero-soft:#A9C7B8; --hero-accent:#E3B24D;
+  --good:#5FD3A0; --good-bg:#12382A; --bad:#FF9A8B; --bad-bg:#432019;
+  --c1:#5FD3A0; --c2:#7FB2F0; --c3:#E3B24D; --c4:#C79BE6;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink);
+  font:400 16px/1.5 var(--f-body);
+  padding-block:12px 40px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:560px;margin:0 auto}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[tabindex="-1"]:focus{outline:none}
+
+.eyebrow{font:500 12px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0}
+
+/* Home */
+.hero{background:var(--hero-bg);color:var(--hero-ink);border-radius:20px;padding:24px 20px 22px;display:flex;flex-direction:column;gap:14px;margin-top:4px}
+.hero .eyebrow{color:var(--hero-soft)}
+.hero h1{font:800 clamp(32px,9.5vw,46px)/1.02 var(--f-display);letter-spacing:-.025em;margin:0;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--hero-accent)}
+.hero p{margin:0;color:var(--hero-soft);max-width:46ch}
+.hero .facts{font:500 12px/1.4 var(--f-mono);letter-spacing:.04em;color:var(--hero-ink)}
+.list{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.game{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;padding:14px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;text-decoration:none;min-height:84px;transition:transform .12s ease,border-color .12s ease}
+.game:active{transform:scale(.99)}
+.game:hover{border-color:var(--ic,var(--accent))}
+.ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:var(--ic);background:var(--bg);background:color-mix(in srgb,var(--ic) 14%,var(--surface))}
+.ico svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.gbody{display:flex;flex-direction:column;gap:2px;min-width:0}
+.gbody strong{font:700 17px/1.2 var(--f-display)}
+.gbody span{font-size:14px;color:var(--muted);line-height:1.35}
+.gbody em{font:500 12px/1.3 var(--f-mono);font-style:normal;color:var(--muted);margin-top:4px}
+.chev{font-size:22px;color:var(--muted);line-height:1}
+.foot{margin-top:28px;display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.5;color:var(--muted)}
+.foot p{margin:0}
+
+/* Game screens */
+.screen{display:flex;flex-direction:column;gap:16px}
+.gbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.back{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;color:var(--muted);font-weight:500;font-size:15px}
+.gname{font:500 12px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right}
+.prog{display:flex;gap:4px}
+.prog i{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.prog i.ok{background:var(--good)}
+.prog i.no{background:var(--bad)}
+.prog i.now{background:var(--accent)}
+.count{margin:0;font:500 13px/1.3 var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.timer{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.timer b{display:block;height:100%;width:100%;background:var(--accent)}
+.qhead{display:flex;flex-direction:column;gap:8px}
+.lead-q{margin:0;font:500 12px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.q{margin:0;font:700 23px/1.25 var(--f-display);letter-spacing:-.01em;text-wrap:balance}
+.q.subject{font-size:28px;line-height:1.15}
+
+.opts{display:grid;gap:10px}
+.opts.duo,.opts.quad{grid-template-columns:1fr 1fr}
+.opt{position:relative;display:flex;align-items:center;gap:10px;width:100%;min-height:56px;padding:12px 38px 12px 14px;text-align:left;font:500 16px/1.3 var(--f-body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.opt:active:not(:disabled){transform:scale(.99)}
+.opt .ot{display:flex;flex-direction:column;gap:2px;min-width:0}
+.opt strong{font-weight:600}
+.opt small{font-size:12.5px;line-height:1.3;color:var(--muted);font-weight:400}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}
+.opt:disabled{cursor:default;color:var(--ink)}
+.opt.is-correct{border-color:var(--good);background:var(--good-bg)}
+.opt.is-wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.is-dim{opacity:.55}
+.opt[data-mark]::after{content:attr(data-mark);position:absolute;top:8px;right:12px;font-weight:800;font-size:18px;line-height:1}
+.opt.is-correct::after{color:var(--good)}
+.opt.is-wrong::after{color:var(--bad)}
+.quad .opt{flex-direction:column;align-items:flex-start;justify-content:center;gap:8px;min-height:104px}
+.duo .opt{justify-content:center;min-height:88px;text-align:center;font:700 21px/1.1 var(--f-display)}
+.duo .opt strong{font-weight:inherit}
+.num .opt{font:500 22px/1.2 var(--f-mono);min-height:62px}
+.num .opt strong{font-weight:inherit}
+
+.fb{border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.fb.good{background:var(--good-bg)}
+.fb.bad{background:var(--bad-bg)}
+.fb strong{font:700 17px/1.2 var(--f-display)}
+.fb.good strong{color:var(--good)}
+.fb.bad strong{color:var(--bad)}
+.fb p{margin:0;font-size:15px;line-height:1.45}
+.fb .src{font:500 12px/1.4 var(--f-mono);color:var(--muted)}
+
+.btn{display:flex;align-items:center;justify-content:center;min-height:54px;padding:0 20px;border-radius:12px;border:0;background:var(--brand);color:var(--on-brand);font:700 16px/1 var(--f-body);text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn:active{transform:scale(.99)}
+
+/* Result */
+.result{align-items:stretch;text-align:left}
+.big{margin:0;font:800 clamp(88px,30vw,128px)/.9 var(--f-display);letter-spacing:-.04em;color:var(--accent);font-variant-numeric:tabular-nums}
+.big small{font:500 clamp(22px,7vw,30px)/1 var(--f-mono);letter-spacing:0;color:var(--muted);margin-left:6px}
+.msg{margin:0;font:600 20px/1.3 var(--f-display);text-wrap:balance}
+.sub{margin:0;color:var(--muted);font-size:15px}
+.actions{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+
+/* Memory */
+.mem{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mc{position:relative;min-height:96px;padding:8px;border-radius:12px;border:1.5px solid var(--brand);background:var(--brand);color:var(--on-brand);display:grid;place-items:center;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mc span{opacity:0;font:500 13px/1.25 var(--f-body);overflow-wrap:anywhere}
+.mc.term span{font:700 16px/1.15 var(--f-display)}
+.mc::before{content:"";position:absolute;width:26px;height:26px;border-radius:50%;border:2.5px solid var(--on-brand);opacity:.55}
+.mc.up,.mc.done{background:var(--surface);color:var(--ink);border-color:var(--accent)}
+.mc.up span,.mc.done span{opacity:1}
+.mc.up::before,.mc.done::before{display:none}
+.mc.done{background:var(--good-bg);border-color:var(--good)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap" id="app"></div>
+
+<script>
+(function(){
+'use strict';
+const app=document.getElementById('app');
+const $=s=>document.querySelector(s);
+
+/* ---------- helpers ---------- */
+let best={};
+try{best=JSON.parse(localStorage.getItem('bbva25')||'{}')||{};}catch(e){best={};}
+function saveBest(id,val,lower){
+  const cur=best[id];
+  if(cur==null||(lower?val<cur:val>cur)){
+    best[id]=val;
+    try{localStorage.setItem('bbva25',JSON.stringify(best));}catch(e){}
+  }
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}return a;}
+let timers=[],tick=null;
+function later(fn,ms){const t=setTimeout(fn,ms);timers.push(t);return t;}
+function cleanup(){timers.forEach(clearTimeout);timers=[];clearInterval(tick);tick=null;}
+function set(html){
+  app.innerHTML=html;
+  window.scrollTo(0,0);
+  const h=app.querySelector('h1,h2');
+  if(h){h.setAttribute('tabindex','-1');try{h.focus({preventScroll:true});}catch(e){}}
+}
+
+/* ---------- data ---------- */
+const mc=r=>{
+  const o=shuffle(r.o.map((t,i)=>({t:t,ok:i===r.a})));
+  return {q:r.q,opts:o.map(x=>({t:x.t})),a:o.findIndex(x=>x.ok),why:r.why,p:r.p};
+};
+
+const TRIVIA=[
+  {q:'¿Cuántas sucursales tiene BBVA Argentina?',o:['234','180','312','150'],a:0,why:'Suma además 868 cajeros automáticos y 890 terminales de autoservicio.'},
+  {q:'¿Cuál es el propósito institucional de BBVA Argentina?',o:['Acompañar tu voluntad de llegar más lejos','Crecer juntos hacia el futuro','Finanzas simples para todos','Cuidar lo que más importa'],a:0,why:'Es el propósito que guía su gestión, junto con tres valores corporativos.'},
+  {q:'¿Con qué estándares se elaboró el Reporte Integrado 2025?',o:['GRI y SASB','Solo ISO 26000','Solo normas contables locales','Ningún estándar externo'],a:0,why:'Usa GRI y SASB para bancos comerciales, y se alinea con el Pacto Global y los ODS.',p:'Reporte, pág. 3'},
+  {q:'¿En qué año adhirió BBVA Argentina a la red local del Pacto Global?',o:['2019','2015','2021','2023'],a:0,why:'Además contribuye a los Objetivos de Desarrollo Sostenible que definió como prioritarios.',p:'Reporte, pág. 3'},
+  {q:'¿Qué firma emitió el informe de aseguramiento limitado?',o:['EY','Deloitte','PwC','KPMG'],a:0,why:'El informe de EY figura al final del reporte.',p:'Reporte, pág. 233'},
+  {q:'¿Qué nivel de seguridad da un aseguramiento limitado?',o:['Moderado, con pruebas selectivas','Total, revisa el 100% de los datos','Ninguno, es solo una opinión','Solo revisa los balances'],a:0,why:'Un aseguramiento razonable sí implicaría una verificación exhaustiva de los datos.'},
+  {q:'¿Cuántos colaboradores forman el equipo de BBVA Argentina?',o:['6.551','4.200','8.900','3.050'],a:0,why:'Con 39,9 años de edad promedio y 12 años de antigüedad promedio.',p:'Reporte, págs. 122 a 145'},
+  {q:'¿Qué es Edufin?',o:['Una iniciativa de educación financiera','Una tarjeta de crédito','Un fondo común de inversión','Una billetera virtual'],a:0,why:'Brinda herramientas sobre finanzas personales, emprendimientos y sostenibilidad.',p:'Reporte, págs. 148 a 151'},
+  {q:'¿Qué certificaciones ISO tiene el sistema de gestión ambiental y energético?',o:['ISO 14001 e ISO 50001','ISO 9001 e ISO 27001','ISO 45001 e ISO 26000','ISO 14001 e ISO 45001'],a:0,why:'La ISO 45001, en cambio, guía la salud y la seguridad laboral.',p:'Reporte, pág. 166'},
+  {q:'¿Cuál NO es un valor corporativo de BBVA Argentina?',o:['La ganancia es lo primero','El cliente es lo primero','Pensamos en grande','Somos un solo equipo'],a:0,why:'Los tres valores son: El cliente es lo primero, Pensamos en grande y Somos un solo equipo.'}
+];
+
+const VF=[
+  {q:'El Directorio aprueba las políticas de Responsabilidad Social y Sostenibilidad.',v:true,why:'Además fija los objetivos de desarrollo sostenible de la entidad.'},
+  {q:'El reporte tiene un aseguramiento razonable que verifica el 100% de los datos.',v:false,why:'Tiene un aseguramiento limitado, de nivel moderado.',p:'Reporte, pág. 233'},
+  {q:'BBVA Argentina está presente en todas las provincias y en CABA.',v:true,why:'Lo hace con canales digitales y una red física de 234 sucursales.'},
+  {q:'El reporte analiza la materialidad de impacto y la materialidad financiera.',v:true,why:'Es el análisis de doble materialidad.',p:'Reporte, págs. 83 a 85'},
+  {q:'La mora de BBVA (4,18%) fue mayor que la del sistema (5,29%).',v:false,why:'Fue menor: 4,18% frente a 5,29% del sistema.'},
+  {q:'El banco informó impactos negativos significativos sobre comunidades locales.',v:false,why:'Declara que no detectó impactos negativos significativos por sus operaciones directas.'},
+  {q:'Todos los empleados recibieron capacitación en derechos humanos.',v:false,why:'Fueron 3.124 empleados, el 47,68% de la dotación.',p:'Reporte, pág. 146'},
+  {q:'El reporte se elaboró con los estándares GRI y SASB.',v:true,why:'Y se alinea con el Pacto Global y los ODS.'},
+  {q:'El ROE de BBVA (7,3) superó el promedio del sistema bancario (4,4).',v:true,why:'Fue una de las señales de su desempeño económico en 2025.'},
+  {q:'BBVA Argentina expone un único presupuesto consolidado de sostenibilidad.',v:false,why:'Reparte las partidas en cada capítulo, porque ve la sostenibilidad como un modelo transversal.'}
+];
+
+const STAKE_OPTS=[
+  {t:'Colaborar',sub:'Coopera mucho, amenaza alta',c:'--c1'},
+  {t:'Implicar',sub:'Coopera mucho, amenaza baja',c:'--c2'},
+  {t:'Defender',sub:'Coopera poco, amenaza alta',c:'--c3'},
+  {t:'Controlar',sub:'Coopera poco, amenaza baja',c:'--c4'}
+];
+const STAKE=[
+  {q:'Accionistas e inversores',a:0,why:'Alto potencial de cooperación y de amenaza.'},
+  {q:'Proveedores',a:0,why:'Alto potencial de cooperación y de amenaza.'},
+  {q:'Empleados',a:1,why:'Alto potencial de cooperación y bajo de amenaza.'},
+  {q:'Clientes',a:1,why:'Alto potencial de cooperación y bajo de amenaza.'},
+  {q:'Reguladores y supervisores (CNV, BCRA)',a:2,why:'Bajo potencial de cooperación y alto de amenaza.'},
+  {q:'Organizaciones de la sociedad civil',a:3,why:'Bajo potencial de cooperación y de amenaza.'},
+  {q:'Comunidad',a:3,why:'Bajo potencial de cooperación y de amenaza.'}
+].map(x=>Object.assign({p:'Reporte, pág. 82'},x));
+
+const DIM_OPTS=[
+  {t:'Social',c:'--c2'},{t:'Ambiental',c:'--c1'},{t:'Económico',c:'--c3'},{t:'Gobernanza',c:'--c4'}
+];
+const DIM=[
+  {q:'93% de compromiso en la encuesta de Kantar',a:0,why:'Es un indicador de prácticas laborales y trabajo digno.'},
+  {q:'4,30 toneladas de residuos peligrosos',a:1,why:'Son residuos operativos de sucursales y edificios.'},
+  {q:'Resultado del ejercicio: AR$ 267.420 millones',a:2,why:'Forma parte del desempeño económico del banco.'},
+  {q:'Código de Conducta y Política Anticorrupción',a:3,why:'Son el marco de ética y transparencia del Directorio.'},
+  {q:'Certificación ISO 14001 e ISO 50001',a:1,why:'Corresponde al sistema de gestión ambiental y energético.'},
+  {q:'2.483.000 personas alcanzadas por el Plan de Inversión en la Comunidad',a:0,why:'Es parte del aporte del banco a la sociedad.'},
+  {q:'ROE de 7,3 frente a 4,4 del sistema',a:2,why:'La rentabilidad es un indicador de desempeño económico.'},
+  {q:'42% de mujeres en el Directorio',a:3,why:'El reporte lo destaca dentro de la gobernanza.'},
+  {q:'1.250 tCO2eq de emisiones directas (Alcance 1)',a:1,why:'Es la huella de carbono de las operaciones propias.'},
+  {q:'Prevención del lavado de dinero (PLA/FT)',a:3,why:'Es un requisito para preservar la integridad corporativa.'},
+  {q:'Créditos al sector privado: +47,6%',a:2,why:'Es parte del desempeño en créditos y depósitos.'},
+  {q:'Protocolo contra el acoso laboral y sexual',a:0,why:'Es parte del compromiso con los derechos humanos.'}
+];
+
+const CIFRAS=[
+  {q:'¿Qué porcentaje de la dotación se capacitó en derechos humanos?',o:['12,3%','27,5%','47,68%'],a:2,why:'Fueron 3.124 empleados y 15.026 horas de formación.',p:'Reporte, pág. 146'},
+  {q:'¿Cuánto invirtió BBVA en la comunidad durante 2025?',o:['AR$ 89,4 millones','AR$ 893,54 millones','AR$ 8.935 millones'],a:1,why:'Alcanzó a más de 2.483.000 personas.',p:'Reporte, págs. 148 a 159'},
+  {q:'¿Qué inflación anual cita el reporte para 2025?',o:['31,5%','54,0%','78,3%'],a:0,why:'Es parte del panorama macroeconómico del reporte.',p:'Reporte, págs. 34 y 35'},
+  {q:'¿Cuántos años de antigüedad promedio tiene el personal?',o:['3 años','7 años','12 años'],a:2,why:'La edad promedio es de 39,9 años.'},
+  {q:'¿Cuántos cajeros automáticos tiene el banco?',o:['420','868','1.350'],a:1,why:'Y 890 terminales de autoservicio.'},
+  {q:'¿Cuál fue la tasa de rotación total del personal?',o:['3,82%','11,5%','18,7%'],a:0,why:'Equivale a 250 egresos durante 2025.'},
+  {q:'¿Cuántas iniciativas incluyó el Plan de Inversión en la Comunidad?',o:['28','71','140'],a:1,why:'Con 53 alianzas estratégicas.',p:'Reporte, págs. 148 a 159'},
+  {q:'¿Qué porcentaje de mujeres hay en el Directorio?',o:['15%','28%','42%'],a:2,why:'El reporte lo destaca como diversidad de género en el gobierno corporativo.'},
+  {q:'¿Qué cuota de mercado récord alcanzó en créditos al sector privado?',o:['4,5%','11,91%','22,3%'],a:1,why:'Los créditos al sector privado crecieron 47,6%.'},
+  {q:'¿Cuántas horas de capacitación en derechos humanos se dictaron?',o:['1.500','5.200','15.026'],a:2,why:'Participaron 3.124 empleados.',p:'Reporte, pág. 146'}
+];
+
+const PAIRS=[
+  ['GRI','Estándares de reporte'],
+  ['SASB','Sostenibilidad en bancos'],
+  ['EY','Aseguramiento limitado'],
+  ['Edufin','Educación financiera'],
+  ['ISO 45001','Salud y seguridad laboral'],
+  ['Pacto Global','10 principios de la ONU']
+];
+
+const IC={
+  trivia:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7"/><path d="M12 17h.01"/></svg>',
+  vf:'<svg viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z"/></svg>',
+  stake:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>',
+  dim:'<svg viewBox="0 0 24 24"><path d="M12 3v9h9"/><path d="M20.5 15A9 9 0 1 1 12 3"/></svg>',
+  num:'<svg viewBox="0 0 24 24"><path d="M5 9h14M5 15h14M10 4 8 20M16 4l-2 16"/></svg>',
+  mem:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="11" height="14" rx="2"/><rect x="10" y="8" width="11" height="12" rx="2"/></svg>'
+};
+
+const GAMES=[
+  {id:'trivia',name:'Trivia del reporte',desc:'Diez preguntas sobre el banco y su reporte.',meta:'10 preguntas',c:'--c1',icon:IC.trivia,total:10,layout:'stack',
+    build:()=>shuffle(TRIVIA).map(mc)},
+  {id:'verdadero-falso',name:'Verdadero o falso',desc:'Decidí en 8 segundos si la afirmación es cierta.',meta:'10 afirmaciones · 8 s cada una',c:'--c3',icon:IC.vf,total:10,layout:'duo',timer:8000,lead:'Verdadero o falso',
+    build:()=>shuffle(VF).map(x=>({q:x.q,opts:[{t:'Verdadero'},{t:'Falso'}],a:x.v?0:1,why:x.why,p:x.p}))},
+  {id:'grupos-de-interes',name:'Mapa de grupos de interés',desc:'Ubicá a cada grupo en la matriz de BBVA.',meta:'7 grupos',c:'--c2',icon:IC.stake,total:7,layout:'quad',qclass:'subject',lead:'¿En qué cuadrante lo ubica BBVA?',
+    build:()=>shuffle(STAKE).map(x=>({q:x.q,opts:STAKE_OPTS,a:x.a,why:x.why,p:x.p}))},
+  {id:'dimensiones',name:'Cuatro dimensiones',desc:'Clasificá cada dato del reporte en su dimensión.',meta:'10 datos',c:'--c4',icon:IC.dim,total:10,layout:'quad',qclass:'subject',lead:'¿A qué dimensión pertenece este dato?',
+    build:()=>shuffle(DIM).slice(0,10).map(x=>({q:x.q,opts:DIM_OPTS,a:x.a,why:x.why}))},
+  {id:'cifras',name:'Adiviná la cifra',desc:'Elegí el número real entre tres opciones.',meta:'8 preguntas',c:'--c3',icon:IC.num,total:8,layout:'stack num',
+    build:()=>shuffle(CIFRAS).slice(0,8).map(x=>({q:x.q,opts:x.o.map(t=>({t:t})),a:x.a,why:x.why,p:x.p}))},
+  {id:'memoria',name:'Memoria de conceptos',desc:'Uní cada concepto con su significado.',meta:'6 pares',c:'--c1',icon:IC.mem,kind:'memory'}
+];
+
+/* ---------- home ---------- */
+function bestText(g){
+  const v=best[g.id];
+  if(v==null) return 'Sin jugar todavía';
+  return g.kind==='memory'?('Mejor marca: '+v+' intentos'):('Mejor resultado: '+v+'/'+g.total);
+}
+function home(){
+  set(
+    '<section class="hero">'+
+      '<p class="eyebrow">Facultad de Ciencias Económicas · UNNE</p>'+
+      '<h1>Reporte Integrado <em>2025</em> en seis juegos</h1>'+
+      '<p>Todas las preguntas salen del reporte de BBVA Argentina. Elegí un juego y descubrí cómo informa un banco su impacto social, ambiental y económico.</p>'+
+      '<p class="facts">6 juegos · 1 a 2 minutos cada uno</p>'+
+    '</section>'+
+    '<ul class="list">'+GAMES.map(g=>
+      '<li><a class="game" href="#'+g.id+'" style="--ic:var('+g.c+')">'+
+        '<span class="ico" aria-hidden="true">'+g.icon+'</span>'+
+        '<span class="gbody"><strong>'+g.name+'</strong><span>'+g.desc+'</span><em>'+g.meta+' · '+bestText(g)+'</em></span>'+
+        '<span class="chev" aria-hidden="true">›</span>'+
+      '</a></li>').join('')+'</ul>'+
+    '<footer class="foot">'+
+      '<p class="eyebrow">Aclaraciones</p>'+
+      '<p>Proyecto académico sin fines de lucro del Seminario de Contabilidad Social y Ambiental, Facultad de Ciencias Económicas, Universidad Nacional del Nordeste, 2026. No es un producto de BBVA ni cuenta con su aval o participación. BBVA es una marca de su titular y se nombra solo para identificar el reporte analizado.</p>'+
+      '<p>Los datos provienen de la Memoria Anual – Reporte Integrado 2025 de BBVA Argentina S.A., de acceso público, y se resumieron con fines educativos. Pueden contener errores: para cifras oficiales, consultá el reporte original.</p>'+
+      '<p>Desarrollado con ayuda de Claude (Anthropic) como herramienta de apoyo. El contenido fue revisado y adaptado por los estudiantes.</p>'+
+      '<p>Esta página no pide ni guarda datos personales. Tu mejor resultado queda solo en tu dispositivo. Las tipografías se cargan desde Google Fonts, de licencia abierta.</p>'+
+    '</footer>'
+  );
+}
+
+/* ---------- quiz engine ---------- */
+function bar(g){return '<div class="gbar"><a class="back" href="#">← Juegos</a><span class="gname">'+g.name+'</span></div>';}
+
+function startQuiz(g){
+  cleanup();
+  const qs=g.build();
+  let i=0,score=0,locked=false;
+  const marks=[];
+
+  function show(){
+    const q=qs[i];
+    locked=false;
+    const segs=qs.map((_,k)=>'<i class="'+(k<i?marks[k]:(k===i?'now':''))+'"></i>').join('');
+    set(
+      '<section class="screen">'+bar(g)+
+      '<div class="prog" aria-hidden="true">'+segs+'</div>'+
+      '<p class="count">Pregunta '+(i+1)+' de '+qs.length+' · '+score+' '+(score===1?'acierto':'aciertos')+'</p>'+
+      (g.timer?'<div class="timer" aria-hidden="true"><b id="tb"></b></div>':'')+
+      '<div class="qhead">'+(g.lead?'<p class="lead-q">'+g.lead+'</p>':'')+'<h2 class="q '+(g.qclass||'')+'">'+q.q+'</h2></div>'+
+      '<div class="opts '+g.layout+'" id="opts">'+q.opts.map((o,k)=>
+        '<button class="opt" type="button" data-k="'+k+'">'+
+          (o.c?'<span class="dot" style="background:var('+o.c+')"></span>':'')+
+          '<span class="ot"><strong>'+o.t+'</strong>'+(o.sub?'<small>'+o.sub+'</small>':'')+'</span>'+
+        '</button>').join('')+'</div>'+
+      '<div class="fb" id="fb" hidden aria-live="polite"></div>'+
+      '<button class="btn" id="next" type="button" hidden>'+(i===qs.length-1?'Ver resultado':'Siguiente')+'</button>'+
+      '</section>'
+    );
+    $('#opts').addEventListener('click',e=>{const b=e.target.closest('.opt');if(b)answer(+b.dataset.k);});
+    $('#next').addEventListener('click',()=>{i++;if(i<qs.length)show();else finish();});
+    if(g.timer)runTimer();
+  }
+
+  function runTimer(){
+    const el=$('#tb');
+    const t0=performance.now();
+    tick=setInterval(()=>{
+      const r=Math.max(0,1-(performance.now()-t0)/g.timer);
+      el.style.width=(r*100)+'%';
+      if(r<=0){clearInterval(tick);tick=null;answer(-1);}
+    },100);
+  }
+
+  function answer(k){
+    if(locked)return;
+    locked=true;
+    clearInterval(tick);tick=null;
+    const q=qs[i];
+    const ok=k===q.a;
+    if(ok)score++;
+    marks[i]=ok?'ok':'no';
+    document.querySelectorAll('.opt').forEach((b,idx)=>{
+      b.disabled=true;
+      if(idx===q.a){b.classList.add('is-correct');b.dataset.mark='✓';}
+      else if(idx===k){b.classList.add('is-wrong');b.dataset.mark='✗';}
+      else b.classList.add('is-dim');
+    });
+    const fb=$('#fb');
+    fb.className='fb '+(ok?'good':'bad');
+    fb.innerHTML='<strong>'+(k<0?'Se acabó el tiempo':(ok?'Correcto':'Incorrecto'))+'</strong><p>'+q.why+'</p>'+(q.p?'<p class="src">'+q.p+'</p>':'');
+    fb.hidden=false;
+    $('#next').hidden=false;
+    fb.scrollIntoView({block:'nearest'});
+  }
+
+  function finish(){
+    const total=qs.length;
+    saveBest(g.id,score);
+    const r=score/total;
+    const msg=r>=0.9?'Excelente. Conocés el reporte al detalle.':(r>=0.6?'Muy bien. Ya casi lo dominás.':'Buen comienzo. Jugá de nuevo para mejorar.');
+    set(
+      '<section class="screen result">'+bar(g)+
+      '<p class="eyebrow">Tu resultado</p>'+
+      '<p class="big">'+score+'<small>/'+total+'</small></p>'+
+      '<p class="msg">'+msg+'</p>'+
+      '<div class="prog" aria-hidden="true">'+marks.map(m=>'<i class="'+m+'"></i>').join('')+'</div>'+
+      '<p class="sub">Mejor resultado: '+best[g.id]+'/'+total+'</p>'+
+      '<div class="actions"><button class="btn" id="again" type="button">Jugar de nuevo</button><a class="btn ghost" href="#">Elegir otro juego</a></div>'+
+      '</section>'
+    );
+    $('#again').addEventListener('click',()=>startQuiz(g));
+  }
+
+  show();
+}
+
+/* ---------- memory ---------- */
+function startMemory(g){
+  cleanup();
+  const cards=shuffle(PAIRS.flatMap((p,i)=>[{pair:i,t:p[0],kind:'term',st:'down'},{pair:i,t:p[1],kind:'def',st:'down'}]));
+  let up=[],moves=0,matched=0,lock=false;
+
+  set(
+    '<section class="screen">'+bar(g)+
+    '<h2 class="q">Uní cada concepto con su significado</h2>'+
+    '<p class="count" id="mcount"></p>'+
+    '<div class="mem" id="mem">'+cards.map((c,k)=>'<button class="mc '+c.kind+'" type="button" data-k="'+k+'"><span>'+c.t+'</span></button>').join('')+'</div>'+
+    '</section>'
+  );
+  const btns=[...document.querySelectorAll('.mc')];
+  function paint(){
+    btns.forEach((b,k)=>{
+      const c=cards[k];
+      b.classList.toggle('up',c.st==='up');
+      b.classList.toggle('done',c.st==='done');
+      b.setAttribute('aria-label',c.st==='down'?'Carta boca abajo':c.t);
+    });
+    $('#mcount').textContent='Intentos: '+moves+' · Pares: '+matched+' de '+PAIRS.length;
+  }
+  paint();
+
+  $('#mem').addEventListener('click',e=>{
+    const b=e.target.closest('.mc');
+    if(!b||lock)return;
+    const c=cards[+b.dataset.k];
+    if(c.st!=='down')return;
+    c.st='up';up.push(c);
+    if(up.length===2){
+      moves++;
+      const x=up[0],y=up[1];
+      if(x.pair===y.pair){
+        x.st='done';y.st='done';matched++;up=[];
+        if(matched===PAIRS.length)later(win,800);
+      }else{
+        lock=true;
+        later(()=>{x.st='down';y.st='down';up=[];lock=false;paint();},900);
+      }
+    }
+    paint();
+  });
+
+  function win(){
+    saveBest(g.id,moves,true);
+    const msg=moves<=8?'Excelente memoria.':(moves<=12?'Muy bien. Probá hacerlo con menos intentos.':'Buen trabajo. Jugá de nuevo para bajar los intentos.');
+    set(
+      '<section class="screen result">'+bar(g)+
+      '<p class="eyebrow">Tu resultado</p>'+
+      '<p class="big">'+moves+'<small>intentos</small></p>'+
+      '<p class="msg">'+msg+'</p>'+
+      '<p class="sub">Mejor marca: '+best[g.id]+' intentos. Lo mínimo posible es 6.</p>'+
+      '<div class="actions"><button class="btn" id="again" type="button">Jugar de nuevo</button><a class="btn ghost" href="#">Elegir otro juego</a></div>'+
+      '</section>'
+    );
+    $('#again').addEventListener('click',()=>startMemory(g));
+  }
+}
+
+/* ---------- router ---------- */
+function route(){
+  cleanup();
+  const id=location.hash.slice(1);
+  const g=GAMES.find(x=>x.id===id);
+  if(!g)return home();
+  if(g.kind==='memory')startMemory(g);else startQuiz(g);
+}
+window.addEventListener('hashchange',route);
+route();
+})();
+</script>
+
+</body>
+</html>
